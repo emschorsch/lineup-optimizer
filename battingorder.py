@@ -22,14 +22,14 @@ def inputorder():
         print("Using default order")
         return order
     elif len(temp) != 9:
-        print("Lineup should be nine numbers eg 123456789. Using default lineup instead")
+        print("Lineup should be nine numbers eg 012345678. Using default lineup instead")
         return order
     else:
         for i, char in enumerate(temp):
             try:
                 order[i] = int(char)
             except:
-                print("Input should be all numbers eg 123456789. Using default lineup instead")
+                print("Input should be all numbers eg 012345678. Using default lineup instead")
                 return order
 
     return order
