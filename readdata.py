@@ -3,7 +3,6 @@ import numpy as np
 
 from lineuploader import create_player_matrix
 
-
 """
  Here's how we get the dimensions (this is true for all files):
    In each inning, there are 24 possible states:
