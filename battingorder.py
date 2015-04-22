@@ -5,14 +5,36 @@ from createrunmatrix import createrunmatrix
 from readdata import readdata
 from calculate import calculate
 
-def battingorder(filename, order):
+def battingorder(filename):
     playermatrices = readdata('braves.data')
     runmatrix = createrunmatrix()
 
-    #order = [5]*9
+    order = inputorder()
+    print(order)
 
     runs = calculate(order, playermatrices, runmatrix)
     print("This lineup will score an average of %f runs per game.", runs)
+
+def inputorder():
+    temp = input("Please input the batting lineup: ")
+    order = [0]*9
+    if len(temp) < 2:
+        print("Using default order")
+        return order
+    elif len(temp) != 9:
+        print("Lineup should be nine numbers eg 123456789. Using default lineup instead")
+        return order
+    else:
+        for i, char in enumerate(temp):
+            try:
+                order[i] = int(char)
+            except:
+                print("Input should be all numbers eg 123456789. Using default lineup instead")
+                return order
+
+    return order
+
+
 
 """
 Try 9 copies of each batter
@@ -29,6 +51,6 @@ This lineup will score an average of %f runs per game. 0.225582535146
 
 Seems remotely correct that 3rd batter has the highest expected runs
 """
-for i in range(9):
-    battingorder("test", [i]*9)
-
+#for i in range(9):
+ #   battingorder("test")
+battingorder("test")
