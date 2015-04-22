@@ -30,7 +30,7 @@ def get_player_matrices(filename):
 def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # convert to probabilities
     total = home_runs + triples + doubles + singles + walks + outs
-    h = homeruns / total
+    h = home_runs / total
     t = triples / total
     d = doubles / total
     s = singles / total
@@ -73,6 +73,10 @@ def create_run_matrix():
 def get_expected_runs():
     filename = "files/"
     player_matrices = get_player_matrices(filename)
-    run_matrix =
+    run_matrix = []
 
-get_expected_runs()
+#get_expected_runs()
+#h, t, d, s, w, o
+stats = [10, 20, 30, 40, 40, 80]
+a = create_player_matrix(*stats)
+print(a)
