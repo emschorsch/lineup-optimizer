@@ -2,31 +2,6 @@
 
 import numpy as np
 
-"""
-def get_player_matrices(filename):
-    player_matrices = []
-    with open(filename, 'r') as infile:
-        for line in infile:
-            current_player = np.zeros()
-            line.split()
-
-            # TODO: split the line and convert to integers
-            home_runs =
-            triples =
-            doubles =
-            singles =
-            walks =
-            outs =
-
-            player_matrix = create_player_matrix(home_runs,
-                                                 triples,
-                                                 doubles,
-                                                 singles,
-                                                 walks,
-                                                 outs)
-            player_matrices.append(player_matrix)
-"""
-
 def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # convert to probabilities
     total = home_runs + triples + doubles + singles + walks + outs
@@ -79,4 +54,3 @@ def get_expected_runs():
 #h, t, d, s, w, o
 stats = [10, 20, 30, 40, 40, 80]
 a = create_player_matrix(*stats)
-print(a)

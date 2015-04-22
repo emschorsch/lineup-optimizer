@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 
-from createrunmatrix import *
-from lineuploader import *
+from lineuploader import create_player_matrix
 
 
 """
