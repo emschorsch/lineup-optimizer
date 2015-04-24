@@ -4,7 +4,7 @@ from math import pow
 import argparse
 
 def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
-    # convert to probabilities
+    # converts counts to probabilities
     total = home_runs + triples + doubles + singles + walks + outs
     h = home_runs / total
     t = triples / total
@@ -13,8 +13,11 @@ def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     w = walks / total
     o = outs / total
 
-    sub_matrix = np.zeros((8, 8), dtype=float)
+    # this submatrix will appear for each inning and each number of outs -
+    # it gives the probabilities of changing states when an out does not
+    # occur.
 
+    sub_matrix = np.zeros((8, 8), dtype=float)
     sub_matrix[0] = [h, w+s, d, t, 0, 0, 0, 0]
     sub_matrix[1] = [h, 0, d/2, t, w+s/2, s/2, d/2, 0]
     sub_matrix[2] = [h, s/2, d, t, w, s/2, 0, 0]
@@ -30,18 +33,29 @@ def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
         end = i * 8 + 8
         transition_matrix[start:end, start:end] = sub_matrix
 
+    # Now, when an out occurs and it's not the third out, just advance to
+    # the same inning and same on-base state with one more out.
 
     for i in range(9):
         for j in range(2):
             start = (i*24) + (j*8)
             transition_matrix[start:(start+8), (start+8):(start+16)] = o * np.eye(8, dtype=float)
 
-        transition_matrix[(i*24) + 16 : (i*24) + 24, (i+1)*24] = [o]*8#o * np.ones((8,1), dtype=float)
+       # In each inning, the third out goes to the next inning's
+       # "0 out, 0 on base" state regardless of who was on base before.
+        transition_matrix[(i*24) + 16 : (i*24) + 24, (i+1)*24] = [o]*8
 
+       # The final "game over" state can only go to itself.
     transition_matrix[9*24, 9*24] = 1
 
     return transition_matrix
 
+
+"""
+Reads in the data from filename
+Expected format is comma delimited file with no header.
+Should include all relevant stats and finally player names
+"""
 def readdata(filename):
 
     # player_matrices = np.zeros((9 , 9*24+1 , 9*24+1), dtype="float32" )
