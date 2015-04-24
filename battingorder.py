@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 from math import pow
+import argparse
 
 def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # convert to probabilities
@@ -150,17 +151,16 @@ def calculate(order, player_matrices, runmatrix):
 
     return runs
 
-def inputorder():
-    temp = input("Please input the batting lineup: ")
+def inputorder(user_input):
     order = [0]*9
-    if len(temp) < 2:
+    if len(user_input) < 2:
         print("Using default order")
         return order
-    elif len(temp) != 9:
+    elif len(user_input) != 9:
         print("Lineup should be nine numbers eg 012345678. Using default lineup instead")
         return order
     else:
-        for i, char in enumerate(temp):
+        for i, char in enumerate(user_input):
             try:
                 order[i] = int(char)
             except:
@@ -169,48 +169,17 @@ def inputorder():
 
     return order
 
-def permute_order(order):
-    length = len(order)
-    first, second = np.random.choice(range(length), 2, replace=True)
-    order[first], order[second] = order[second], order[first]
-    return order
-
 if __name__ == '__main__':
-    """
-    Try 9 copies of each batter
-    Results are:
-    This lineup will score an average of %f runs per game. 9.60140189459
-    This lineup will score an average of %f runs per game. 4.76948439237
-    This lineup will score an average of %f runs per game. 10.8520288514
-    This lineup will score an average of %f runs per game. 4.60449504573
-    This lineup will score an average of %f runs per game. 3.73024487193
-    This lineup will score an average of %f runs per game. 7.40812596236
-    This lineup will score an average of %f runs per game. 5.71254887106
-    This lineup will score an average of %f runs per game. 6.26625113282
-    This lineup will score an average of %f runs per game. 0.225582535146
 
-    Seems remotely correct that 3rd batter has the highest expected runs
-    """
-    player_matrices = readdata('braves.data')
+    parser = argparse.ArgumentParser(description='Given a lineup, find the expected number of runs.')
+    parser.add_argument("filename", nargs='?', default='braves.data', help="file with necessary statistics")
+    parser.add_argument("lineup", nargs='?', default='012345678', help="batting lineup")
+    args = parser.parse_args()
+
+    order = inputorder(args.lineup)
+    player_matrices = readdata(args.filename)
     run_matrix = createrunmatrix()
 
-    order = [0,1,2,3,4,5,6,7,8]
-
-    num_iterations = 10000
-    for i in range(num_iterations):
-        new_order = permute_order(order.copy())
-        current_score = calculate(order, player_matrices, run_matrix)
-        new_score = calculate(new_order, player_matrices, run_matrix)
-        accept_prob = min(1, pow(3000, 5*(new_score - current_score)))
-        # print(accept_prob, new_score, current_score)
-        accept = np.random.choice([True, False], p=[accept_prob, 1 - accept_prob])
-
-        if (i % 500 == 0):
-            print(order)
-            print(current_score, new_score)
-
-        if accept:
-            order = new_order
-
     runs = calculate(order, player_matrices, run_matrix)
-    print("This lineup will score an average of %f runs per game.", runs)
+
+    print("This lineup will score an average of {} runs per game.".format(runs))
