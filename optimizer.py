@@ -1,14 +1,20 @@
 from battingorder import *
 
-def permute_order(order):
-    length = len(order)
-    first, second = np.random.choice(range(length), 2, replace=True)
-    order[first], order[second] = order[second], order[first]
-    return order
+# TODO: need to differentiate between swapping within
+# the roster and swapping out of the roster
+def permute_order(current_order, whole_team):
+    length = len(current_order)
+    index_to_swap = np.random.choice(range(length))
+    num_at_index = current_order[index_to_swap]
+    invalid_choices = set(current_order) - { num_at_index }
+    valid_choices = list(set(whole_team) - invalid_choices)
+    swap_in = np.random.choice(valid_choices)
+    current_order[index_to_swap] = swap_in
+    return current_order
 
-def MCMC(player_matrices, run_matrix, order, num_iterations, print_every):
+def MCMC(player_matrices, run_matrix, order, num_iterations, print_every, whole_team):
     for j in range(args.num_iterations):
-        new_order = permute_order(order.copy())
+        new_order = permute_order(order.copy(), whole_team)
         current_score = calculate(order, player_matrices, run_matrix)
         new_score = calculate(new_order, player_matrices, run_matrix)
         accept_prob = min(1, pow(3000, 5*(new_score - current_score)))
@@ -18,7 +24,7 @@ def MCMC(player_matrices, run_matrix, order, num_iterations, print_every):
             order = new_order
 
         if (j % print_every == 0):
-            print(j, order)
+            print(j, order, current_score)
 
     runs = calculate(order, player_matrices, run_matrix)
 
@@ -44,7 +50,8 @@ if __name__ == "__main__":
                       run_matrix,
                       order,
                       args.num_iterations,
-                      args.print_every)
+                      args.print_every,
+                      range(len(player_matrices)))
         samples.append(result)
 
 
