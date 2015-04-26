@@ -6,7 +6,7 @@ def permute_order(order):
     order[first], order[second] = order[second], order[first]
     return order
 
-def MCMC(player_matrices, run_matrix, order, num_iterations):
+def MCMC(player_matrices, run_matrix, order, num_iterations, print_every):
     for j in range(args.num_iterations):
         new_order = permute_order(order.copy())
         current_score = calculate(order, player_matrices, run_matrix)
@@ -17,15 +17,18 @@ def MCMC(player_matrices, run_matrix, order, num_iterations):
         if accept:
             order = new_order
 
+        if (j % print_every == 0):
+            print(j, order)
+
     runs = calculate(order, player_matrices, run_matrix)
 
     return (runs, order)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Find the best batting lineup.')
-    # TODO: print every n orderings, or whatever.
     parser.add_argument("num_iterations", type=int, help="number of iterations for MCMC")
     parser.add_argument("num_samples", type=int, help="number of samples taken")
+    parser.add_argument("print_every", type=int, help="print every nth lineup")
     parser.add_argument("filename", nargs='?', default='braves.data', help="file with necessary statistics")
     args = parser.parse_args()
 
@@ -36,8 +39,15 @@ if __name__ == "__main__":
 
     samples = []
     for i in range(args.num_samples):
-        result = MCMC(player_matrices, run_matrix, order, args.num_iterations)
+        print("Sample", i+1, ":")
+        result = MCMC(player_matrices,
+                      run_matrix,
+                      order,
+                      args.num_iterations,
+                      args.print_every)
         samples.append(result)
+
+
 
     samples.sort(reverse=True)
     best = samples[0]
