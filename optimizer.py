@@ -1,15 +1,18 @@
 from battingorder import *
 
-# TODO: need to differentiate between swapping within
-# the roster and swapping out of the roster
 def permute_order(current_order, whole_team):
+    permute_within = np.random.choice([True, False])
     length = len(current_order)
-    index_to_swap = np.random.choice(range(length))
-    num_at_index = current_order[index_to_swap]
-    invalid_choices = set(current_order) - { num_at_index }
-    valid_choices = list(set(whole_team) - invalid_choices)
-    swap_in = np.random.choice(valid_choices)
-    current_order[index_to_swap] = swap_in
+    if permute_within:
+        first, second = np.random.choice(length, 2, replace=True)
+        current_order[first], current_order[second] = current_order[second], current_order[first]
+    else:
+        index_to_swap = np.random.choice(range(length))
+        num_at_index = current_order[index_to_swap]
+        invalid_choices = set(current_order) - { num_at_index }
+        valid_choices = list(set(whole_team) - invalid_choices)
+        swap_in = np.random.choice(valid_choices)
+        current_order[index_to_swap] = swap_in
     return current_order
 
 def MCMC(player_matrices, run_matrix, order, num_iterations, print_every, whole_team):
