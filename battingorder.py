@@ -175,6 +175,22 @@ def inputorder(user_input):
 
     return order
 
+def get_run_expectancy(roster_stats, order=[0,1,2,3,4,5,6,7,8]):
+    assert(len(order) == 9)
+    run_matrix = createrunmatrix()
+
+    player_matrices = []
+
+    for stats in roster_stats:
+        # Assume the first 6 columns are the positional stats
+        player_matrix = create_player_matrix(*stats[:6])
+        player_matrices.append(player_matrix)
+
+
+    runs = calculate(order, player_matrices, run_matrix)
+
+    return runs
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Given a lineup, find the expected number of runs.')
