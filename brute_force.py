@@ -9,11 +9,15 @@ if __name__ == "__main__":
     player_matrices = readdata(args.filename)
     run_matrix = createrunmatrix()
 
-    start_order = range(9)
+    start_order = list(range(9))
 
     samples = []
+    max_score = 0
     for order in permutations(start_order):
         score = calculate(order, player_matrices, run_matrix)
+        if score > max_score:
+            max_score = score
+            print("score: ", score, order)
         samples.append((score, order))
 
     samples.sort(reverse=True)

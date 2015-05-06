@@ -17,6 +17,12 @@ def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # it gives the probabilities of changing states when an out does not
     # occur.
 
+    # state 0 is (0), state 1 is (1), state 2 is (2), state 3 is (3)
+    # state 4 is (1,2), state 5 is (1,3), state 6 is (2, 3)
+    # state 7 is (1,2,3)
+    # Runners advance at least as many bases as the batter does
+    # Half the time runners advance 1 more than needed
+
     sub_matrix = np.zeros((8, 8), dtype=float)
     sub_matrix[0] = [h, w+s, d, t, 0, 0, 0, 0]
     sub_matrix[1] = [h, 0, d/2, t, w+s/2, s/2, d/2, 0]

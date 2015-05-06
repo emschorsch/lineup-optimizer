@@ -185,19 +185,3 @@ stats = [[38,5,33,113,98,383,'ChipperJones_LF'],
 print("lineup: ", battingorder.get_run_expectancy(stats))
 
 get_prediction_errors(year)
-exit(1)
-game_run_expectancy('ANA200303300')
-for player in get_roster():
-    print(get_player_stats(player))
-
-
-"""    
-print get_stats("jonec004")
-print get_stats("jonea002")
-print get_stats("shefg001")
-print get_stats("castv001")
-#print get_stats("jonec004")
-#print get_stats("jonec004")
-#print get_stats("jonec004")
-"""
-
