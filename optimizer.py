@@ -16,10 +16,16 @@ def permute_order(current_order, whole_team):
     return current_order
 
 def MCMC(player_matrices, run_matrix, order, num_iterations, print_every, whole_team):
+    max_score = -1.0
+    max_order = None
     for j in range(args.num_iterations):
         new_order = permute_order(order.copy(), whole_team)
         current_score = calculate(order, player_matrices, run_matrix)
         new_score = calculate(new_order, player_matrices, run_matrix)
+        if new_score > max_score:
+            max_score = new_score
+            max_order = new_order
+
         accept_prob = min(1, pow(3000, 5*(new_score - current_score)))
         accept = np.random.choice([True, False], p=[accept_prob, 1 - accept_prob])
 
@@ -28,9 +34,11 @@ def MCMC(player_matrices, run_matrix, order, num_iterations, print_every, whole_
 
         if (j % print_every == 0):
             print(j, order, current_score)
+            print("max:", j, max_order, max_score)
 
     runs = calculate(order, player_matrices, run_matrix)
 
+    return (max_score, max_order)
     return (runs, order)
 
 if __name__ == "__main__":
