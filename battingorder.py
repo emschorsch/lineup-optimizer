@@ -1,7 +1,10 @@
 #!/usr/bin/env python
+from __future__ import print_function, unicode_literals
+from __future__ import absolute_import, division
 import numpy as np
 from math import pow
 import argparse
+
 
 def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # converts counts to probabilities
@@ -22,6 +25,7 @@ def create_player_matrix(home_runs, triples, doubles, singles, walks, outs):
     # state 7 is (1,2,3)
     # Runners advance at least as many bases as the batter does
     # Half the time runners advance 1 more than needed
+    # NO from the email it sounds like used league average data. How come so perfect then? Need to read the other paper he talks about
 
     sub_matrix = np.zeros((8, 8), dtype=float)
     sub_matrix[0] = [h, w+s, d, t, 0, 0, 0, 0]
@@ -149,8 +153,7 @@ def calculate(order, player_matrices, runmatrix):
         index = order[batter]
         player_matrix = player_matrices[index]
 
-        #import pdb
-        #pdb.set_trace()
+        # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
         temp = np.dot(situation, (runmatrix * player_matrix))
         runs += np.sum(temp);
 
